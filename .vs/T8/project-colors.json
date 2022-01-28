@@ -1,0 +1,21 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "61fe31c4-b244-4c13-baf6-f66857f0b88e": {
+      "ProjectGuid": "61fe31c4-b244-4c13-baf6-f66857f0b88e",
+      "DisplayName": "CommonSuite",
+      "ColorIndex": 0
+    },
+    "f5ba4a6c-5d17-44a1-b8fd-bf2f1dfcec24": {
+      "ProjectGuid": "f5ba4a6c-5d17-44a1-b8fd-bf2f1dfcec24",
+      "DisplayName": "T8SuitePro",
+      "ColorIndex": 1
+    },
+    "ffb5f5bc-d457-495b-b1b2-7722df0bf59d": {
+      "ProjectGuid": "ffb5f5bc-d457-495b-b1b2-7722df0bf59d",
+      "DisplayName": "RealtimeGraph",
+      "ColorIndex": 2
+    }
+  },
+  "NextColorIndex": 3
+}
