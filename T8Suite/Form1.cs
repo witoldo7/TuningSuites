@@ -3604,6 +3604,7 @@ namespace T8SuitePro
                     frminfo.ECUDescription = t8header.EcuDescription;
                     frminfo.InterfaceDevice = t8header.InterfaceDevice;
                     frminfo.NumberOfFlashBlocks = t8header.NumberOfFlashBlocks.ToString();
+                    frminfo.SecretCode = t8header.SecretCode;
 
                     if (frminfo.ShowDialog() == DialogResult.OK)
                     {
@@ -3619,19 +3620,23 @@ namespace T8SuitePro
                         t8header.HardwareID = frminfo.HardwareID;
                         t8header.InterfaceDevice = frminfo.InterfaceDevice;
                         t8header.EcuDescription = frminfo.ECUDescription;
+                        t8header.SecretCode = frminfo.SecretCode;
                         // only if enabled
                         if (frminfo.ChangeVINAndImmo)
                         {
-                            t8header.UpdateVinAndImmoCode();
+                            t8header.UpdateBlock();
                         }
                         if (frminfo.ChangeSoftwareVersion)
                         {
                             t8header.UpdateSoftwareVersion();
                         }
-                        // We don't want this code atm, it's a bit unsafe
-#if (DEBUG)
-                        t8header.UpdatePIarea();
-#endif
+                        t8header.UpdatePartNumber();
+                        t8header.UpdateProgramingDevice();
+                        t8header.UpdateReleaseDate();
+                        t8header.UpdateSerialNumber();
+                        t8header.UpdateProgramerName();
+                        t8header.UpdateHardwareID();
+
                         UpdateChecksum(m_currentfile, m_appSettings.AutoChecksum);
                     }
                 }

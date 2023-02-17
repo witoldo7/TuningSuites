@@ -28,20 +28,20 @@ namespace T8SuitePro
             set { _numberOfFlashBlocks = value; }
         }
 
-        private string _interfaceDevice = string.Empty;
+        private string m_interfaceDevice = string.Empty;
 
         public string InterfaceDevice
         {
-            get { return _interfaceDevice; }
-            set { _interfaceDevice = value; }
+            get { return m_interfaceDevice; }
+            set { m_interfaceDevice = value; }
         }
 
-        private string _ecuDescription = string.Empty;
+        private string m_ecuDescription = string.Empty;
 
         public string EcuDescription
         {
-            get { return _ecuDescription; }
-            set { _ecuDescription = value; }
+            get { return m_ecuDescription; }
+            set { m_ecuDescription = value; }
         }
 
         private string m_programmerDevice = string.Empty;
@@ -109,6 +109,14 @@ namespace T8SuitePro
         {
             get { return m_ChassisID; }
             set { m_ChassisID = value; }
+        }
+
+        private string m_SecretCode = string.Empty;
+
+        public string SecretCode
+        {
+            get { return m_SecretCode; }
+            set { m_SecretCode = value; }
         }
 
         private string m_PartNumber = string.Empty;
@@ -209,7 +217,7 @@ namespace T8SuitePro
                 type = Convert.ToInt32(piarea[i++]);
                 if (len == 0xF7 && type == 0xF7) break;
                 //printf("\nLENGTH = %02X, TYPE = %02X, text = ", len, type);
-                
+
                 string data = string.Empty;
                 try
                 {
@@ -277,11 +285,11 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                         m_deviceType = data;
                         break;
                 }
-            } while (i < piarea.Length -1 );
+            } while (i < piarea.Length - 1);
 
             //TODO: decode vin parts etc
             DecodeExtraInfo(filename);
-
+            DumpThisData(piarea, @"C:\t8decode\" + Path.GetFileNameWithoutExtension(filename) + "_piarea.bin");
         }
 
         private int[] lowaddress = new int[32];
@@ -317,10 +325,10 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
             _highSegmentCounter += Convert.ToInt32(file_data[0x2005]) * 256 * 256;
             _highSegmentCounter += Convert.ToInt32(file_data[0x2006]) * 256;
             _highSegmentCounter += Convert.ToInt32(file_data[0x2007]);
-           // Thread.Sleep(100); // <to get the debug output correct>
+            // Thread.Sleep(100); // <to get the debug output correct>
 
             // get the addresses of the lower flash blocks
-            
+
             int idx = 0x0E;
             int lowBlkCnt = 0;
             int lowAddressIdx = 0;
@@ -334,22 +342,22 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                 descriptor += file_data[idx + 4].ToString("X2") + " ";
                 descriptor += file_data[idx + 5].ToString("X2") + " ";
                 AddToHeaderLog(descriptor);
-                if (file_data[idx] != 0x44 || file_data[idx+1] != 0x2A)
+                if (file_data[idx] != 0x44 || file_data[idx + 1] != 0x2A)
                 {
                     if (lowBlkCnt == 0)
                     {
                         lowaddress[lowAddressIdx] = Convert.ToInt32(file_data[idx]) * 256 + Convert.ToInt32(file_data[idx + 1]);
-                        lowtypes[lowAddressIdx] = Convert.ToInt32(file_data[idx+5]);
+                        lowtypes[lowAddressIdx] = Convert.ToInt32(file_data[idx + 5]);
                         lowAddressIdx++;
                     }
                     if (lowBlkCnt >= 2)
                     {
-                        lowaddress[lowAddressIdx] = Convert.ToInt32(file_data[idx]) * 256 + Convert.ToInt32(file_data[idx +1]);
+                        lowaddress[lowAddressIdx] = Convert.ToInt32(file_data[idx]) * 256 + Convert.ToInt32(file_data[idx + 1]);
                         lowtypes[lowAddressIdx] = Convert.ToInt32(file_data[idx + 5]); ;
                         lowAddressIdx++;
                     }
                     lowBlkCnt++;
-                    
+
                 }
                 idx += 6;
             }
@@ -386,7 +394,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                 if (lowaddress[t] != 0 && lowaddress[t] != 0xFFFF)
                 {
                     AddToHeaderLog("Found low address: " + lowaddress[t].ToString("X8") + " type: " + lowtypes[t].ToString("X2"));
-                   // AddToHeaderLog("Low segment headers address : " + address.ToString("X8") + " type: " + type.ToString("X4"));
+                    // AddToHeaderLog("Low segment headers address : " + address.ToString("X8") + " type: " + type.ToString("X4"));
 
                     switch (lowtypes[t])
                     {
@@ -552,7 +560,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                     AddToHeaderLog(dbg);
                 }
             }
-            
+
             // first find 0x78 0x5A 0x84 0xE6... marks the start of this stuff, there are two halves both 0x2000 bytes long
             // every block = 0x130 bytes so a maximum of 1A blocks. Substract the offset 0x2d8 in each half which means 2 blocks.
             // That leaves a maximum number of blocks of 0x18 (24) in each half.
@@ -564,21 +572,22 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                 string _vin = string.Empty;
                 string _interfacedevice = string.Empty;
                 string _ecudescription = string.Empty;
-                string secretcode = string.Empty;
-                fbcheck.DecodeBlock(out _vin, out _ecudescription, out _interfacedevice, out secretcode);
+                string _secretcode = string.Empty;
+                fbcheck.DecodeBlock(out _vin, out _ecudescription, out _interfacedevice, out _secretcode);
                 DumpThisData(fbcheck.BlockData, @"C:\T8Decode\flashblock" + iblock.ToString() + ".blk");
                 AddToHeaderLog("Found (" + fbcheck.BlockNumber.ToString() + ") VIN: " + _vin + " address: " + fbcheck.BlockAddress.ToString("X8"));
                 AddToHeaderLog("Found (" + fbcheck.BlockNumber.ToString() + ") ECU: " + _ecudescription);
                 AddToHeaderLog("Found (" + fbcheck.BlockNumber.ToString() + ") ITF: " + _interfacedevice);
-                AddToHeaderLog("Found (" + fbcheck.BlockNumber.ToString() + ") SEC: " + secretcode);
+                AddToHeaderLog("Found (" + fbcheck.BlockNumber.ToString() + ") SEC: " + _secretcode);
                 if (m_ChassisID != _vin) m_ChassisID = _vin;
-                if (_interfaceDevice != _interfacedevice) _interfaceDevice = _interfacedevice;
-                if (_ecuDescription != _ecudescription) _ecuDescription = _ecudescription;
+                if (m_SecretCode != _secretcode) m_SecretCode = _secretcode;
+                if (m_interfaceDevice != _interfacedevice) m_interfaceDevice = _interfacedevice;
+                if (m_ecuDescription != _ecudescription) m_ecuDescription = _ecudescription;
             }
             _numberOfFlashBlocks = fbc.Count;
         }
 
-        
+
 
         private void DumpThisData(byte[] data, string filename)
         {
@@ -644,7 +653,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                         case 0xFF: // information record pointer
                             // read this record and fill immocode etc
                             retval = address;
-                            
+
                             break;
                     }
                 }
@@ -670,7 +679,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
 
         private void AddToHeaderLog(string item)
         {
-            if(Directory.Exists(@"C:\T8Decode"))
+            if (Directory.Exists(@"C:\T8Decode"))
             {
                 using (StreamWriter sw = new StreamWriter(@"C:\T8Decode\flashblocks.log", true))
                 {
@@ -679,76 +688,38 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
             }
         }
 
-        internal bool UpdateVinAndImmoCode()
+        internal bool UpdateBlock()
         {
-            UpdateVin(m_ChassisID);
-            UpdateSerialNumber(m_SerialNumber);
+            UpdateBlock(true, true, true, true);
             return true;
-            /*bool retval = false;
-            // save the currently set vin and immocode into the file
-            byte[] file_data = readdatafromfile(m_fileName, 0x4000, 0x4000);
-
-            if (fbc != null)
-            {
-                if (fbc.Count == 1)
-                {
-                    // don't bother to update any other stuff than VIN and immo
-                    fbc[0].SetVin(m_ChassisID);
-                    DumpThisData(fbc[0].BlockData, @"C:\T8Decode\flashblock_afterchange.blk");
-                    fbc[0].CodeBlock();
-                    DumpThisData(fbc[0].BlockData, @"C:\T8Decode\flashblock_afterchangeandcode.blk");
-                }
-                // save the immo code into the correct info block(s)
-                savedatatobinary(fbc[0].BlockAddress, fbc[0].BlockData.Length, fbc[0].BlockData, m_fileName);
-                int infoBlockAddress = GetInfoBlockAddress();
-                // 16 bytes immocode
-                int pc = 0;
-                byte[] immoBytes = new byte[16];
-                m_ImmobilizerID.PadRight(16, ' ');
-                for (pc = 0; pc < 16; pc++)
-                {
-                    immoBytes[pc] = Convert.ToByte(m_ImmobilizerID[pc]);
-                }
-                // save bytes
-                savedatatobinary(infoBlockAddress + 10, 16, immoBytes, m_fileName);
-            }
-            return retval;*/
         }
 
-        internal bool UpdateSerialNumber(string serialNumber)
+        private bool UpdateSerialNumber(string serialNumber)
         {
             if (fbc != null)
             {
                 int pc = 0;
                 byte[] serialBytes = new byte[16];
-                m_SerialNumber.PadRight(16, ' ');
+                serialNumber = serialNumber.PadRight(16, ' ');
                 for (pc = 0; pc < 16; pc++)
                 {
                     serialBytes[pc] = Convert.ToByte(serialNumber[pc]);
                 }
-                for(int i = 0; i < lowtypes.Length; i ++)
+                for (int i = 0; i < lowtypes.Length; i++)
                 {
                     // get the type of block?
                     if (lowtypes[i] == 0xFF && lowaddress[i] != 0 && lowaddress[i] != 0xFFFF)
                     {
                         logger.Debug("Updating for serialNumber: " + lowaddress[i].ToString("X8"));
-                        for (pc = 0; pc < 16; pc++)
-                        {
-                            serialBytes[pc] = Convert.ToByte(m_SerialNumber[pc]);
-                        }
                         savedatatobinary(lowaddress[i] + 10, 16, serialBytes, m_fileName);
                     }
                 }
-                for(int i = 0; i < hightypes.Length; i ++)
+                for (int i = 0; i < hightypes.Length; i++)
                 {
                     // get the type of block?
                     if (hightypes[i] == 0xFF && highaddress[i] != 0 && highaddress[i] != 0xFFFF)
                     {
                         logger.Debug("Updating for serialNumber: " + highaddress[i].ToString("X8"));
-                        for (pc = 0; pc < 16; pc++)
-                        {
-                            serialBytes[pc] = Convert.ToByte(m_SerialNumber[pc]);
-                        }
                         savedatatobinary(highaddress[i] + 10, 16, serialBytes, m_fileName);
                     }
                 }
@@ -756,15 +727,53 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
             return false;
         }
 
-        internal bool UpdateVin(string VINNumber)
+        internal bool UpdatePartNumberExtra(string partNumber)
         {
             if (fbc != null)
             {
-                if (VINNumber.Length > 17) return false;
-                if (VINNumber.Length < 17) VINNumber.PadRight(17, '0');
+                int pc = 0;
+                byte[] partBytes = new byte[10];
+                partNumber = partNumber.PadRight(10, ' ');
+                for (pc = 0; pc < 10; pc++)
+                {
+                    partBytes[pc] = Convert.ToByte(partNumber[pc]);
+                }
+                for (int i = 0; i < lowtypes.Length; i++)
+                {
+                    // get the type of block?
+                    if (lowtypes[i] == 0xFF && lowaddress[i] != 0 && lowaddress[i] != 0xFFFF)
+                    {
+                        logger.Debug("Updating for partNumber: " + lowaddress[i].ToString("X8"));
+                        savedatatobinary(lowaddress[i], 10, partBytes, m_fileName);
+                    }
+                }
+                for (int i = 0; i < hightypes.Length; i++)
+                {
+                    // get the type of block?
+                    if (hightypes[i] == 0xFF && highaddress[i] != 0 && highaddress[i] != 0xFFFF)
+                    {
+                        logger.Debug("Updating for partNumber: " + highaddress[i].ToString("X8"));
+                        savedatatobinary(highaddress[i], 10, partBytes, m_fileName);
+                    }
+                }
+            }
+            return false;
+        }
+
+        internal bool UpdateBlock(bool vin, bool secret, bool iface, bool description)
+        {
+            if ((vin || secret || iface || description) && fbc != null)
+            {
+                if (vin && (m_ChassisID.Length < 17)) m_ChassisID = m_ChassisID.PadRight(17, '0');
+                if (secret && (m_SecretCode.Length < 4)) m_SecretCode = m_SecretCode.PadRight(4, '0');
+                if (secret && (m_interfaceDevice.Length < 4)) m_interfaceDevice = m_interfaceDevice.PadRight(4, '0');
+                if (secret && (m_ecuDescription.Length < 4)) m_ChassisID = m_ecuDescription.PadRight(4, '0');
                 foreach (FlashBlock fb in fbc)
                 {
-                    fb.SetVin(VINNumber);
+                    if (vin) fb.SetVin(m_ChassisID);
+                    if (secret) fb.SetSecret(m_SecretCode);
+                    if (iface) fb.SetInterface(m_interfaceDevice);
+                    if (description) fb.SetDescription(m_ecuDescription);
                     //DumpThisData(fb.BlockData, @"C:\T8Decode\flashblock_afterchange" + fb.BlockNumber.ToString() + "_" + fb.BlockAddress.ToString("X8") + ".blk");
                     fb.CodeBlock();
                     //DumpThisData(fb.BlockData, @"C:\T8Decode\flashblock_afterchangeandcode" + fb.BlockNumber.ToString() + "_" + fb.BlockAddress.ToString("X8") + ".blk");
@@ -778,76 +787,8 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
 
         internal void ClearVIN()
         {
-            UpdateVin("                 ");
-        }
-
-        internal void UpdatePIarea()
-        {
-            if (m_fileName == "") return;
-            int checksumAreaOffset = ChecksumT8.GetChecksumAreaOffset(m_fileName);
-            int endOfPIArea = GetEmptySpaceStartFrom(m_fileName, checksumAreaOffset);
-
-            //Console.WriteLine("Area: " + checksumAreaOffset.ToString("X8") + " - " + endOfPIArea.ToString("X8"));
-            byte[] piarea = readdatafromfile(m_fileName, checksumAreaOffset, endOfPIArea - checksumAreaOffset + 1);
-            //Console.WriteLine("Size: " + piarea.Length.ToString());
-            for (int t = 0; t < piarea.Length; t++)
-            {
-                piarea[t] += 0xD6;
-                piarea[t] ^= 0x21;
-            }
-            int i = 0;
-            int len = 0;
-            int type = 0;
-            do
-            {
-                if (i == piarea.Length) break;
-                len = Convert.ToInt32(piarea[i++]);
-                type = Convert.ToInt32(piarea[i++]);
-                if (len == 0xF7 && type == 0xF7) break;
-
-                Console.WriteLine("Len: " + len.ToString("X2") + " Type = " + type.ToString("X2"));
-
-                if (type == 0x92 || type == 0x97 || type == 0x0C || type == 0xC1 || type == 0x08 || type == 0x1D || type == 0x10 || type == 0x0A || type == 0x0F || type == 0x16)
-                {
-                    for (int f = 0; f < len; f++)
-                    {
-                        switch (type)
-                        {
-                            case 0x10:
-                                piarea[i++] = Convert.ToByte(m_programmerDevice[f]);
-                                break;
-                            case 0x1D:
-                                piarea[i++] = Convert.ToByte(m_programmerName[f]);
-                                break;
-                            case 0x0A:
-                                piarea[i++] = Convert.ToByte(m_releaseDate[f]);
-                                break;
-                            case 0x08:
-                                // Disabled
-                                // piarea[i++] = Convert.ToByte(m_SoftwareVersion[f]);
-                                i++;
-                                break;
-                            case 0xC1:
-                                piarea[i++] = Convert.ToByte(m_PartNumber[f]);
-                                break;
-                            case 0x92:
-                                piarea[i++] = Convert.ToByte(m_hardwareID[f]);
-                                break;
-                            case 0x97:
-                                piarea[i++] = Convert.ToByte(m_deviceType[f]);
-                                break;
-                        }
-                    }
-                }
-            } while (i < piarea.Length - 1);
-
-            for (int t = 0; t < piarea.Length; t++)
-            {
-                piarea[t] ^= 0x21;
-                piarea[t] -= 0xD6;
-            }
-
-            savedatatobinary(checksumAreaOffset, piarea.Length, piarea, m_fileName);
+            m_ChassisID = "                 ";
+            UpdateBlock(true, false, false, false);
         }
 
         internal byte[] ReadContainer(byte[] decodedpiArea, byte id)
@@ -880,7 +821,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                 {
                     pos += (int)len;
                 }
-            
+
             }
             return null;
         }
@@ -1014,7 +955,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
         }
 
         // Very much junk code that is just enough to make it work
-        internal void UpdateSoftwareVersion()
+        internal void UpdatePiArea(byte id, string containerdata, int createLen)
         {
             if (m_fileName == "") return;
             int checksumAreaOffset = ChecksumT8.GetChecksumAreaOffset(m_fileName);
@@ -1027,7 +968,7 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
                 piarea[t] ^= 0x21;
             }
 
-            piarea = StoreStringContainer(piarea, 0x08, m_SoftwareVersion, 30);
+            piarea = StoreStringContainer(piarea, id, containerdata, createLen);
             if (piarea == null) return;
 
             for (int t = 0; t < piarea.Length; t++)
@@ -1037,6 +978,42 @@ Len: 0C Type = 10   EOLStation2		//programmed by device                 * */
             }
 
             savedatatobinary(checksumAreaOffset, piarea.Length, piarea, m_fileName);
+        }
+
+        internal void UpdateSoftwareVersion()
+        {
+            UpdatePiArea(0x08, m_SoftwareVersion, 30);
+        }
+
+        internal void UpdatePartNumber()
+        {
+            UpdatePiArea(0xC1, m_PartNumber, 8);
+            UpdatePartNumberExtra(m_PartNumber);
+        }
+
+        internal void UpdateProgramerName()
+        {
+            UpdatePiArea(0x1D, m_programmerName, 17);
+        }
+
+        internal void UpdateProgramingDevice()
+        {
+            UpdatePiArea(0x10, m_programmerDevice, 10);
+        }
+
+        internal void UpdateReleaseDate()
+        {
+            UpdatePiArea(0x0A, m_releaseDate, 19);
+        }
+
+        internal void UpdateHardwareID()
+        {
+            UpdatePiArea(0x92, m_hardwareID, 9);
+        }
+
+        internal void UpdateSerialNumber()
+        {
+            UpdateSerialNumber(m_SerialNumber);
         }
     }
 }

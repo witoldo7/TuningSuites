@@ -115,7 +115,7 @@ namespace T8SuitePro
             }
             catch (Exception E)
             {
-                logger.Debug("Failed to get VIN: " + E.Message);
+                logger.Debug("Failed to get Secret code: " + E.Message);
             }
             //VerifyChecksums();
             DumpVariables();
@@ -222,11 +222,37 @@ adres 0x12C length 2 (byte checksum?)
             return valid;
         }
 
+        internal void SetSecret(string m_Secret)
+        {
+            for (int t = 0x40; t < 0x40 + 0x04; t++)
+            {
+                _blockData[t] = Convert.ToByte(m_Secret[t - 0x40]);
+            }
+        }
+
+        internal void SetDescription(string m_Description)
+        {
+            for (int t = 0xAF; t < 0xAF + 0x10; t++)
+            {
+                _blockData[t] = Convert.ToByte(m_Description[t - 0xAF]);
+            }
+        }
+
         internal void SetVin(string m_ChassisID)
         {
             for (int t = 0xE0; t < 0xE0 + 0x11; t++)
             {
                 _blockData[t] = Convert.ToByte(m_ChassisID[t - 0xE0]); //???
+            }
+        }
+
+        internal void SetInterface(string m_Interface)
+        {
+            for (int t = 0x101; t < 0x101 + 0x0B; t++)
+            {
+                if (_blockData[t] != 0xFF)
+                    _blockData[t] = Convert.ToByte(m_Interface[t - 0x101]);
+
             }
         }
 

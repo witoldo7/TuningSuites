@@ -127,6 +127,20 @@ namespace T8SuitePro
             }
         }
 
+        public string SecretCode
+        {
+            get
+            {
+                while (textEditImmo.Text.Length < textEditImmo.Properties.MaxLength) textEditImmo.Text += " ";
+                return textEditImmo.Text;
+            }
+            set
+            {
+                textEditImmo.Text = value;
+                textEditImmo.Properties.MaxLength = value.Length;
+            }
+        }
+
         public string ReleaseDate
         {
             get
@@ -251,14 +265,13 @@ namespace T8SuitePro
             }
         }
 
-       
-
         private void EnableVinAndImmo()
         {
             if (!textEdit3.Enabled)
             {
                 textEdit3.Enabled = true;
                 textEdit4.Enabled = true;
+                textEditImmo.Enabled = true;
                 simpleButton3.Enabled = true;
                 frmInfoBox info = new frmInfoBox("Warning: T8Suite only has experimental support for changing VIN and immobilizer codes!!!");
             }

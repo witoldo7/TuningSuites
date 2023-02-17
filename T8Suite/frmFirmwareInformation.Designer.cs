@@ -53,6 +53,8 @@ namespace T8SuitePro
             this.checkEdit1 = new DevExpress.XtraEditors.CheckEdit();
             this.textEdit4 = new DevExpress.XtraEditors.TextEdit();
             this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
+            this.textEditImmo = new DevExpress.XtraEditors.TextEdit();
+            this.labelControlImmo = new DevExpress.XtraEditors.LabelControl();
             this.textEdit3 = new DevExpress.XtraEditors.TextEdit();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.textEdit2 = new DevExpress.XtraEditors.TextEdit();
@@ -74,6 +76,7 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.textEdit6.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit5.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditImmo.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit4.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit3.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit2.Properties)).BeginInit();
@@ -109,6 +112,8 @@ namespace T8SuitePro
             this.groupControl1.Controls.Add(this.checkEdit1);
             this.groupControl1.Controls.Add(this.textEdit4);
             this.groupControl1.Controls.Add(this.labelControl4);
+            this.groupControl1.Controls.Add(this.textEditImmo);
+            this.groupControl1.Controls.Add(this.labelControlImmo);
             this.groupControl1.Controls.Add(this.textEdit3);
             this.groupControl1.Controls.Add(this.labelControl3);
             this.groupControl1.Controls.Add(this.textEdit2);
@@ -117,7 +122,7 @@ namespace T8SuitePro
             this.groupControl1.Controls.Add(this.labelControl1);
             this.groupControl1.Location = new System.Drawing.Point(7, 12);
             this.groupControl1.Name = "groupControl1";
-            this.groupControl1.Size = new System.Drawing.Size(572, 433);
+            this.groupControl1.Size = new System.Drawing.Size(572, 459);
             this.groupControl1.TabIndex = 0;
             this.groupControl1.Text = "Firmware details";
             // 
@@ -147,6 +152,26 @@ namespace T8SuitePro
             this.buttonEdit1.Size = new System.Drawing.Size(336, 20);
             this.buttonEdit1.TabIndex = 28;
             this.buttonEdit1.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.buttonEdit1_ButtonClick);
+
+            // 
+            // textEditImmo
+            // 
+            this.textEditImmo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textEditImmo.Enabled = false;
+            this.textEditImmo.Location = new System.Drawing.Point(180, 406);
+            this.textEditImmo.Name = "textEditImmo";
+            this.textEditImmo.Properties.MaxLength = 4;
+            this.textEditImmo.Size = new System.Drawing.Size(336, 20);
+            this.textEditImmo.TabIndex = 33;
+            // 
+            // labelControlImmo
+            // 
+            this.labelControlImmo.Location = new System.Drawing.Point(48, 406);
+            this.labelControlImmo.Name = "labelControl4";
+            this.labelControlImmo.Size = new System.Drawing.Size(50, 13);
+            this.labelControlImmo.TabIndex = 32;
+            this.labelControlImmo.Text = "Immo Code";
             // 
             // simpleButton3
             // 
@@ -306,7 +331,7 @@ namespace T8SuitePro
             // checkEdit1
             // 
             this.checkEdit1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkEdit1.Location = new System.Drawing.Point(178, 410);
+            this.checkEdit1.Location = new System.Drawing.Point(178, 436);
             this.checkEdit1.Name = "checkEdit1";
             this.checkEdit1.Properties.Caption = "Enable overboost (TrqLimCal.EnableOverBoost)";
             this.checkEdit1.Size = new System.Drawing.Size(358, 19);
@@ -331,6 +356,7 @@ namespace T8SuitePro
             this.labelControl4.TabIndex = 6;
             this.labelControl4.Text = "Chassis ID";
             this.labelControl4.DoubleClick += new System.EventHandler(this.labelControl4_DoubleClick);
+
             // 
             // textEdit3
             // 
@@ -390,7 +416,7 @@ namespace T8SuitePro
             // simpleButton1
             // 
             this.simpleButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.simpleButton1.Location = new System.Drawing.Point(504, 451);
+            this.simpleButton1.Location = new System.Drawing.Point(504, 477);
             this.simpleButton1.Name = "simpleButton1";
             this.simpleButton1.Size = new System.Drawing.Size(75, 23);
             this.simpleButton1.TabIndex = 1;
@@ -400,7 +426,7 @@ namespace T8SuitePro
             // simpleButton2
             // 
             this.simpleButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.simpleButton2.Location = new System.Drawing.Point(423, 451);
+            this.simpleButton2.Location = new System.Drawing.Point(423, 477);
             this.simpleButton2.Name = "simpleButton2";
             this.simpleButton2.Size = new System.Drawing.Size(75, 23);
             this.simpleButton2.TabIndex = 2;
@@ -409,9 +435,9 @@ namespace T8SuitePro
             // 
             // frmFirmwareInformation
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(591, 478);
+            this.ClientSize = new System.Drawing.Size(591, 504);
             this.Controls.Add(this.simpleButton2);
             this.Controls.Add(this.simpleButton1);
             this.Controls.Add(this.groupControl1);
@@ -436,6 +462,7 @@ namespace T8SuitePro
             ((System.ComponentModel.ISupportInitialize)(this.textEdit5.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit4.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditImmo.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit3.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).EndInit();
@@ -449,6 +476,8 @@ namespace T8SuitePro
         private DevExpress.XtraEditors.SimpleButton simpleButton1;
         private DevExpress.XtraEditors.TextEdit textEdit4;
         private DevExpress.XtraEditors.LabelControl labelControl4;
+        private DevExpress.XtraEditors.TextEdit textEditImmo;
+        private DevExpress.XtraEditors.LabelControl labelControlImmo;
         private DevExpress.XtraEditors.TextEdit textEdit3;
         private DevExpress.XtraEditors.LabelControl labelControl3;
         private DevExpress.XtraEditors.TextEdit textEdit2;
